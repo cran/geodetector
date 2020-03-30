@@ -279,7 +279,7 @@ write.csv(Result_2 [[2]][2],'./Geodetector_R/
 ```
 
 The result of interaction detector function or ecological detector function also can be saved as CSV file, for example: 
-```{r, eval=F}
+```{r}
 Result_3 <- interaction_detector("incidence",c("soiltype","watershed",
                                                "elevation"),CollectData)
 write.csv(Result_3,'./Geodetector_R/

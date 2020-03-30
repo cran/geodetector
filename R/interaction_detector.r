@@ -251,7 +251,7 @@ interaction_detector<- function(y_column,x_column_nn,tabledata)
     #reletionship of Interaction
 
     nonL <- F
-    if(interValue < X1val & interValue < X2val)
+    if(interValue <= X1val & interValue <= X2val)
     {
       outputRls <- "Weaken, nonlinear"
       description <- "q(Var1 intersect Var2) < Min(q(Var1),q(Var2))"
@@ -274,7 +274,7 @@ interaction_detector<- function(y_column,x_column_nn,tabledata)
       description <- "q(Var1 intersect Var2) > q(Var1) + q(Var2)"
       nonL <- T
     }
-    if( !nonL & interValue > max(X1val, X2val))
+    if( !nonL & interValue >= max(X1val, X2val))
     {
       outputRls <- "Enhance, bi-"
       description <- "q(Var1 intersect Var2) > Max(q(Var1),q(Var2))"
@@ -293,9 +293,9 @@ interaction_detector<- function(y_column,x_column_nn,tabledata)
 
   Intr_Result_r <- as.data.frame(Intr_Result_r)
   colnames(Intr_Result_r)=c("Description")
-  Intr_Result_q <- reshapeMatrix_numeric(Intr_Result_q)
+#  Intr_Result_q <- reshapeMatrix_numeric(Intr_Result_q)#20200329 xucd
 
-  Result_interactionDetector_n<-list('Interaction q-statistic'=Intr_Result_q,"Interaction Reletionship"=Intr_Result_r)
+#  Result_interactionDetector_n<-list('Interaction q-statistic'=Intr_Result_q,"Interaction Reletionship"=Intr_Result_r)#20200329 xucd
 
 
   # return(Result_interactionDetector_n)
@@ -303,32 +303,32 @@ interaction_detector<- function(y_column,x_column_nn,tabledata)
 }
 
 
-reshapeMatrix_numeric <- function(dataset)
-{
-  if(class(dataset) ==  "character") dataset = t(as.matrix(dataset))
-
-  fldName1 <- as.vector(dataset[,1])
-  fldName2 <- as.vector(dataset[,2])
-
-  fldName <- unique(c(fldName1,fldName2))
-  lenFld <- length(fldName)
-
-  CreatMat <- matrix(nrow =lenFld, ncol = lenFld,  dimnames = list(fldName, fldName))
-
-  lenDt <- nrow(dataset)
-
-
-  for(i in 1:lenDt)
-  {
-    fld1 <- fldName1[i]
-    fld2 <- fldName2[i]
-    CreatMat[fld1, fld2] <- as.vector(dataset[i,3])	 #up triangle
-    CreatMat[fld2, fld1] <- as.vector(dataset[i,3])  #down triangle
-  }
-  # 	CreatMat[is.na(CreatMat)]  <- " "
-
-
-  ###convert to data.frame ,so "TRUE"->TRUE
-  T_CreatMat<- as.data.frame(CreatMat)
-  return(T_CreatMat)
-}
+# reshapeMatrix_numeric <- function(dataset)
+# {
+#   if(class(dataset) ==  "character") dataset = t(as.matrix(dataset))
+#
+#   fldName1 <- as.vector(dataset[,1])
+#   fldName2 <- as.vector(dataset[,2])
+#
+#   fldName <- unique(c(fldName1,fldName2))
+#   lenFld <- length(fldName)
+#
+#   CreatMat <- matrix(nrow =lenFld, ncol = lenFld,  dimnames = list(fldName, fldName))
+#
+#   lenDt <- nrow(dataset)
+#
+#
+#   for(i in 1:lenDt)
+#   {
+#     fld1 <- fldName1[i]
+#     fld2 <- fldName2[i]
+#     CreatMat[fld1, fld2] <- as.vector(dataset[i,3])	 #up triangle
+#     CreatMat[fld2, fld1] <- as.vector(dataset[i,3])  #down triangle
+#   }
+#   # 	CreatMat[is.na(CreatMat)]  <- " "
+#
+#
+#   ###convert to data.frame ,so "TRUE"->TRUE
+#   T_CreatMat<- as.data.frame(CreatMat)
+#   return(T_CreatMat)
+# }

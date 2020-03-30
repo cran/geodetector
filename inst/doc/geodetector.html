@@ -1,28 +1,28 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 <meta name="author" content="Chengdong Xu, Yue Hou, Jinfeng Wang, Qian Yin (IGSNRR, CAS)" />
 
-<meta name="date" content="2018-10-22" />
+<meta name="date" content="2020-03-30" />
 
 <title>A tutorial for the geodetector R package</title>
 
 
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
+<style type="text/css" data-origin="pandoc">
 a.sourceLine { display: inline-block; line-height: 1.25; }
 a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; position: absolute; }
+a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -35,13 +35,11 @@ code.sourceCode { white-space: pre-wrap; }
 a.sourceLine { text-indent: -1em; padding-left: 1em; }
 }
 pre.numberSource a.sourceLine
-  { position: relative; }
-pre.numberSource a.sourceLine:empty
-  { position: absolute; }
+  { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
-    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all;
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -83,7 +81,29 @@ code span.st { color: #4070a0; } /* String */
 code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
 </style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
 
 
 
@@ -97,9 +117,6 @@ padding-right: 2em;
 font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 font-size: 14px;
 line-height: 1.35;
-}
-#header {
-text-align: center;
 }
 #TOC {
 clear: both;
@@ -268,8 +285,12 @@ code > span.st { color: #d14; }
 code > span.co { color: #888888; font-style: italic; } 
 code > span.ot { color: #007020; } 
 code > span.al { color: #ff0000; font-weight: bold; } 
-code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
+
+
+
 
 </head>
 
@@ -279,8 +300,8 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 
 <h1 class="title toc-ignore">A tutorial for the <em>geodetector</em> R package</h1>
-<h4 class="author"><em>Chengdong Xu, Yue Hou, Jinfeng Wang, Qian Yin (IGSNRR, CAS)</em></h4>
-<h4 class="date"><em>2018-10-22</em></h4>
+<h4 class="author">Chengdong Xu, Yue Hou, Jinfeng Wang, Qian Yin (IGSNRR, CAS)</h4>
+<h4 class="date">2020-03-30</h4>
 
 
 <div id="TOC">
@@ -325,47 +346,47 @@ q=1- \frac{1}{N\sigma^2}\sum_{h=1}^{L}N_h\sigma_h^2
 <thead>
 <tr class="header">
 <th align="right">incidence</th>
-<th align="right">soiltype</th>
 <th align="right">watershed</th>
+<th align="right">soiltype</th>
 <th align="right">elevation</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">5.94</td>
-<td align="right">5</td>
-<td align="right">5</td>
-<td align="right">5</td>
+<td align="right">7.20</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">6</td>
 </tr>
 <tr class="even">
-<td align="right">5.87</td>
-<td align="right">4</td>
-<td align="right">5</td>
-<td align="right">5</td>
+<td align="right">7.01</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">6</td>
 </tr>
 <tr class="odd">
-<td align="right">5.92</td>
-<td align="right">4</td>
-<td align="right">5</td>
-<td align="right">5</td>
+<td align="right">6.79</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">6</td>
 </tr>
 <tr class="even">
-<td align="right">6.32</td>
-<td align="right">1</td>
-<td align="right">7</td>
-<td align="right">1</td>
+<td align="right">6.73</td>
+<td align="right">4</td>
+<td align="right">3</td>
+<td align="right">6</td>
 </tr>
 <tr class="odd">
-<td align="right">6.49</td>
-<td align="right">3</td>
-<td align="right">2</td>
+<td align="right">6.77</td>
 <td align="right">4</td>
+<td align="right">3</td>
+<td align="right">1</td>
 </tr>
 <tr class="even">
-<td align="right">6.46</td>
-<td align="right">3</td>
-<td align="right">2</td>
+<td align="right">6.74</td>
 <td align="right">4</td>
+<td align="right">3</td>
+<td align="right">6</td>
 </tr>
 </tbody>
 </table>
@@ -378,42 +399,42 @@ Figure 2. Demo data in GIS format (a) NTDs prevalence <em>Y</em>, (b) Elevation 
 </p>
 </div>
 <p>After download of geodetector package, using install.packages function to install it.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">install.packages</span>(<span class="st">&quot;geodetector&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">install.packages</span>(<span class="st">&quot;geodetector&quot;</span>)</a></code></pre></div>
 <p>Load package:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">library</span>(geodetector)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">library</span>(geodetector)</a></code></pre></div>
 <p>Read data in table format:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">data</span>(CollectData)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">data</span>(CollectData)</a></code></pre></div>
 <p>Data class:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">class</span>(CollectData)</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw">class</span>(CollectData)</a></code></pre></div>
 <pre><code>## [1] &quot;data.frame&quot;</code></pre>
 <p>Field names:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">names</span>(CollectData)</a></code></pre></div>
-<pre><code>## [1] &quot;incidence&quot; &quot;soiltype&quot;  &quot;watershed&quot; &quot;elevation&quot;</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="kw">names</span>(CollectData)</a></code></pre></div>
+<pre><code>## [1] &quot;incidence&quot; &quot;watershed&quot; &quot;soiltype&quot;  &quot;elevation&quot;</code></pre>
 <div id="factor-detector" class="section level2">
 <h2>1 Factor detector</h2>
 <p>The factor detector q-statistic measures the SSH of a variable <em>Y</em>, or the determinant power of a covariate <em>X</em> of <em>Y</em>.</p>
 <p>factor_detector implement the function of factor detector. In the following demo, the first parameter “incidence” represent explained variable, the second parameter “elevation” represent explanatory variable, and the third parameter” CollectData&quot; represent dataset.</p>
 <p>The output of the function include q statistic and the corresponding p value.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">factor_detector</span>(<span class="st">&quot;incidence&quot;</span>,<span class="st">&quot;elevation&quot;</span>,CollectData) </a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="kw">factor_detector</span>(<span class="st">&quot;incidence&quot;</span>,<span class="st">&quot;elevation&quot;</span>,CollectData) </a></code></pre></div>
 <pre><code>## [[1]]
 ##           q-statistic    p-value
 ## elevation   0.6067087 0.04080407</code></pre>
 <p>Another way also can be used to implement the function, in which the input parameters can be the index of each field. For example, in the following demo, the first parameter “1” represent explained variable in the first column of the dataset, the second parameter “3” represent explanatory variable in the third column of the dataset.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">factor_detector</span>(<span class="dv">1</span>,<span class="dv">3</span>, CollectData)</a></code></pre></div>
-<pre><code>## [[1]]
-##           q-statistic      p-value
-## watershed   0.6377737 0.0001169914</code></pre>
-<p>If there are more than one variable, the function can be used as the following. In which, c(“soiltype”,“watershed”,“elevation”) or c(2,3,4) are field names and index of field for explanatory variables in columns 2, 3, 4, respectively.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">factor_detector</span> (<span class="st">&quot;incidence&quot;</span>,<span class="kw">c</span>(<span class="st">&quot;soiltype&quot;</span>,<span class="st">&quot;watershed&quot;</span>,<span class="st">&quot;elevation&quot;</span>),CollectData)</a></code></pre></div>
-<p>or</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw">factor_detector</span> (<span class="dv">1</span>,<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>), CollectData)</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="kw">factor_detector</span>(<span class="dv">1</span>,<span class="dv">3</span>, CollectData)</a></code></pre></div>
 <pre><code>## [[1]]
 ##          q-statistic   p-value
-## soiltype   0.3857168 0.3632363
-## 
-## [[2]]
+## soiltype   0.3857168 0.3632363</code></pre>
+<p>If there are more than one variable, the function can be used as the following. In which, c(“soiltype”,“watershed”,“elevation”) or c(2,3,4) are field names and index of field for explanatory variables in columns 2, 3, 4, respectively.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="kw">factor_detector</span> (<span class="st">&quot;incidence&quot;</span>,<span class="kw">c</span>(<span class="st">&quot;soiltype&quot;</span>,<span class="st">&quot;watershed&quot;</span>,<span class="st">&quot;elevation&quot;</span>),CollectData)</a></code></pre></div>
+<p>or</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw">factor_detector</span> (<span class="dv">1</span>,<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>), CollectData)</a></code></pre></div>
+<pre><code>## [[1]]
 ##           q-statistic      p-value
 ## watershed   0.6377737 0.0001169914
+## 
+## [[2]]
+##          q-statistic   p-value
+## soiltype   0.3857168 0.3632363
 ## 
 ## [[3]]
 ##           q-statistic    p-value
@@ -423,11 +444,17 @@ Figure 2. Demo data in GIS format (a) NTDs prevalence <em>Y</em>, (b) Elevation 
 <h2>2 Interaction detector</h2>
 <p>The interaction detector reveals whether the risk factors <em>X<sub>1</sub></em> and <em>X<sub>2</sub></em> (and more <em>X</em>) have an interactive influence on a disease <em>Y</em>.</p>
 <p>The function interaction_detector implement the interaction detector. In the following demo, the first parameter “incidence” represent explained variable, the second parameter c(“soiltype”,“watershed”,“elevation”) represent explanatory variables, and the third parameter “CollectData” represent dataset.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw">interaction_detector</span>(<span class="st">&quot;incidence&quot;</span>,<span class="kw">c</span>(<span class="st">&quot;soiltype&quot;</span>,<span class="st">&quot;watershed&quot;</span>,<span class="st">&quot;elevation&quot;</span>),CollectData)</a></code></pre></div>
-<pre><code>##                    soiltype         watershed         elevation
-## soiltype  0.385716842809428 0.735680548139531 0.663523698335635
-## watershed 0.735680548139531 0.637773670070423  0.71359677853471
-## elevation 0.663523698335635  0.71359677853471 0.606708709727727</code></pre>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="kw">interaction_detector</span>(<span class="st">&quot;incidence&quot;</span>,<span class="kw">c</span>(<span class="st">&quot;soiltype&quot;</span>,<span class="st">&quot;watershed&quot;</span>,<span class="st">&quot;elevation&quot;</span>),CollectData)</a></code></pre></div>
+<pre><code>##       [,1]        [,2]        [,3]               
+##  [1,] &quot;soiltype&quot;  &quot;watershed&quot; &quot;0.735680548139531&quot;
+##  [2,] &quot;soiltype&quot;  &quot;soiltype&quot;  &quot;0.385716842809428&quot;
+##  [3,] &quot;watershed&quot; &quot;watershed&quot; &quot;0.637773670070423&quot;
+##  [4,] &quot;soiltype&quot;  &quot;elevation&quot; &quot;0.663523698335635&quot;
+##  [5,] &quot;soiltype&quot;  &quot;soiltype&quot;  &quot;0.385716842809428&quot;
+##  [6,] &quot;elevation&quot; &quot;elevation&quot; &quot;0.606708709727727&quot;
+##  [7,] &quot;watershed&quot; &quot;elevation&quot; &quot;0.71359677853471&quot; 
+##  [8,] &quot;watershed&quot; &quot;watershed&quot; &quot;0.637773670070423&quot;
+##  [9,] &quot;elevation&quot; &quot;elevation&quot; &quot;0.606708709727727&quot;</code></pre>
 </div>
 <div id="risk-detector" class="section level2">
 <h2>3 Risk detector</h2>
@@ -436,7 +463,7 @@ Figure 2. Demo data in GIS format (a) NTDs prevalence <em>Y</em>, (b) Elevation 
 <p>In the function, result information for each variable is presented in two parts.</p>
 <p>The first part gives the average value of explained variable in each stratum of a explanatory variables.</p>
 <p>The second part tests whether there are significant difference between the means of two strata; if there is a significant difference (t test with significant level of 0.05), the corresponding value is “TRUE”, else it is “FALSE”.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="kw">risk_detector</span>(<span class="st">&quot;incidence&quot;</span>,<span class="st">&quot;soiltype&quot;</span>,CollectData)</a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="kw">risk_detector</span>(<span class="st">&quot;incidence&quot;</span>,<span class="st">&quot;soiltype&quot;</span>,CollectData)</a></code></pre></div>
 <pre><code>## [[1]]
 ## [[1]]$`Risk Detector`
 ##   soiltype Mean of explained variable
@@ -454,47 +481,9 @@ Figure 2. Demo data in GIS format (a) NTDs prevalence <em>Y</em>, (b) Elevation 
 ## 4  TRUE  TRUE  TRUE FALSE  TRUE
 ## 5 FALSE  TRUE  TRUE  TRUE FALSE</code></pre>
 <p>Another way also can be used to implement the function, in which the input parameters can be the index of each field. For example, in the following demo, the the first parameter “1” represent explained variable in the first column of the dataset, the second parameter “2” represent explanatory variable in the second column of the dataset.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="kw">risk_detector</span>(<span class="dv">1</span>,<span class="dv">2</span>, CollectData)</a></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1"><span class="kw">risk_detector</span>(<span class="dv">1</span>,<span class="dv">2</span>, CollectData)</a></code></pre></div>
 <pre><code>## [[1]]
 ## [[1]]$`Risk Detector`
-##   soiltype Mean of explained variable
-## 1        1                   6.340000
-## 2        2                   6.687500
-## 3        3                   6.583279
-## 4        4                   5.843810
-## 5        5                   6.347073
-## 
-## [[1]]$`Significance t-test:0.05`
-##       1     2     3     4     5
-## 1 FALSE  TRUE  TRUE  TRUE FALSE
-## 2  TRUE FALSE FALSE  TRUE  TRUE
-## 3  TRUE FALSE FALSE  TRUE  TRUE
-## 4  TRUE  TRUE  TRUE FALSE  TRUE
-## 5 FALSE  TRUE  TRUE  TRUE FALSE</code></pre>
-<p>If there are more than one variable, the function can be used as the following. In which, c(“soiltype”,“watershed”,“elevation”) and c(2,3,4) are field names and index of field for explanatory variables.</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="kw">risk_detector</span>(<span class="st">&quot;incidence&quot;</span>,<span class="kw">c</span>(<span class="st">&quot;soiltype&quot;</span>,<span class="st">&quot;watershed&quot;</span>,<span class="st">&quot;elevation&quot;</span>),CollectData)</a></code></pre></div>
-<p>or</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="kw">risk_detector</span>(<span class="dv">1</span>,<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>), CollectData)</a></code></pre></div>
-<pre><code>## [[1]]
-## [[1]]$`Risk Detector`
-##   soiltype Mean of explained variable
-## 1        1                   6.340000
-## 2        2                   6.687500
-## 3        3                   6.583279
-## 4        4                   5.843810
-## 5        5                   6.347073
-## 
-## [[1]]$`Significance t-test:0.05`
-##       1     2     3     4     5
-## 1 FALSE  TRUE  TRUE  TRUE FALSE
-## 2  TRUE FALSE FALSE  TRUE  TRUE
-## 3  TRUE FALSE FALSE  TRUE  TRUE
-## 4  TRUE  TRUE  TRUE FALSE  TRUE
-## 5 FALSE  TRUE  TRUE  TRUE FALSE
-## 
-## 
-## [[2]]
-## [[2]]$`Risk Detector`
 ##   watershed Mean of explained variable
 ## 1         1                   6.167813
 ## 2         2                   6.813103
@@ -506,7 +495,35 @@ Figure 2. Demo data in GIS format (a) NTDs prevalence <em>Y</em>, (b) Elevation 
 ## 8         8                   6.360769
 ## 9         9                   6.579231
 ## 
-## [[2]]$`Significance t-test:0.05`
+## [[1]]$`Significance t-test:0.05`
+##       1     2     3     4     5     6     7     8     9
+## 1 FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+## 2  TRUE FALSE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE
+## 3  TRUE  TRUE FALSE  TRUE  TRUE  TRUE FALSE FALSE FALSE
+## 4  TRUE FALSE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE
+## 5  TRUE  TRUE  TRUE  TRUE FALSE FALSE  TRUE  TRUE  TRUE
+## 6  TRUE  TRUE  TRUE  TRUE FALSE FALSE  TRUE  TRUE  TRUE
+## 7  TRUE  TRUE FALSE  TRUE  TRUE  TRUE FALSE FALSE FALSE
+## 8  TRUE  TRUE FALSE  TRUE  TRUE  TRUE FALSE FALSE  TRUE
+## 9  TRUE  TRUE FALSE  TRUE  TRUE  TRUE FALSE  TRUE FALSE</code></pre>
+<p>If there are more than one variable, the function can be used as the following. In which, c(“soiltype”,“watershed”,“elevation”) and c(2,3,4) are field names and index of field for explanatory variables.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="kw">risk_detector</span>(<span class="st">&quot;incidence&quot;</span>,<span class="kw">c</span>(<span class="st">&quot;soiltype&quot;</span>,<span class="st">&quot;watershed&quot;</span>,<span class="st">&quot;elevation&quot;</span>),CollectData)</a></code></pre></div>
+<p>or</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="kw">risk_detector</span>(<span class="dv">1</span>,<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>), CollectData)</a></code></pre></div>
+<pre><code>## [[1]]
+## [[1]]$`Risk Detector`
+##   watershed Mean of explained variable
+## 1         1                   6.167813
+## 2         2                   6.813103
+## 3         3                   6.474231
+## 4         4                   6.728000
+## 5         5                   5.910000
+## 6         6                   5.845714
+## 7         7                   6.494167
+## 8         8                   6.360769
+## 9         9                   6.579231
+## 
+## [[1]]$`Significance t-test:0.05`
 ##       1     2     3     4     5     6     7     8     9
 ## 1 FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
 ## 2  TRUE FALSE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE
@@ -517,6 +534,24 @@ Figure 2. Demo data in GIS format (a) NTDs prevalence <em>Y</em>, (b) Elevation 
 ## 7  TRUE  TRUE FALSE  TRUE  TRUE  TRUE FALSE FALSE FALSE
 ## 8  TRUE  TRUE FALSE  TRUE  TRUE  TRUE FALSE FALSE  TRUE
 ## 9  TRUE  TRUE FALSE  TRUE  TRUE  TRUE FALSE  TRUE FALSE
+## 
+## 
+## [[2]]
+## [[2]]$`Risk Detector`
+##   soiltype Mean of explained variable
+## 1        1                   6.340000
+## 2        2                   6.687500
+## 3        3                   6.583279
+## 4        4                   5.843810
+## 5        5                   6.347073
+## 
+## [[2]]$`Significance t-test:0.05`
+##       1     2     3     4     5
+## 1 FALSE  TRUE  TRUE  TRUE FALSE
+## 2  TRUE FALSE FALSE  TRUE  TRUE
+## 3  TRUE FALSE FALSE  TRUE  TRUE
+## 4  TRUE  TRUE  TRUE FALSE  TRUE
+## 5 FALSE  TRUE  TRUE  TRUE FALSE
 ## 
 ## 
 ## [[3]]
@@ -544,13 +579,13 @@ Figure 2. Demo data in GIS format (a) NTDs prevalence <em>Y</em>, (b) Elevation 
 <h2>4 Ecological detector</h2>
 <p>The ecological detector tests whether there is significant differences between two risk factors <em>X<sub>1</sub></em> ~ <em>X<sub>2</sub></em>.</p>
 <p>The function ecological_detector implement the ecological detector. In the following demo, the first parameter “incidence” represents explained variable, the second parameter c(“soiltype”,“watershed”) represents explanatory variables, and the third parameter “CollectData” represent dataset. In the function, the F statistic is used to test the difference with the significant level of 0.05.</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="kw">ecological_detector</span>(<span class="st">&quot;incidence&quot;</span>,<span class="kw">c</span>(<span class="st">&quot;soiltype&quot;</span>,<span class="st">&quot;watershed&quot;</span>),CollectData)</a></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1"><span class="kw">ecological_detector</span>(<span class="st">&quot;incidence&quot;</span>,<span class="kw">c</span>(<span class="st">&quot;soiltype&quot;</span>,<span class="st">&quot;watershed&quot;</span>),CollectData)</a></code></pre></div>
 <pre><code>## $`Significance.F-test:0.05`
 ##           soiltype watershed
 ## soiltype     FALSE      TRUE
 ## watershed     TRUE     FALSE</code></pre>
 <p>If there are more than two variables, the function can be used as the following.</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="kw">ecological_detector</span>(<span class="st">&quot;incidence&quot;</span>,<span class="kw">c</span>(<span class="st">&quot;soiltype&quot;</span>,<span class="st">&quot;watershed&quot;</span>,<span class="st">&quot;elevation&quot;</span>),CollectData)</a></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1"><span class="kw">ecological_detector</span>(<span class="st">&quot;incidence&quot;</span>,<span class="kw">c</span>(<span class="st">&quot;soiltype&quot;</span>,<span class="st">&quot;watershed&quot;</span>,<span class="st">&quot;elevation&quot;</span>),CollectData)</a></code></pre></div>
 <pre><code>## $`Significance.F-test:0.05`
 ##           soiltype watershed elevation
 ## soiltype     FALSE      TRUE      TRUE
@@ -562,20 +597,20 @@ Figure 2. Demo data in GIS format (a) NTDs prevalence <em>Y</em>, (b) Elevation 
 <h2>5 Transform data from map to table format</h2>
 <p>If the input data is in table format, it can be directly used as input parameters in the above functions. However, if input data is map in shapefile format, the function named geodetector can be used to transform from shapefile map to table format, then the above function can be used. Please note that, these shapefile layers should have the same projected coordinate system.</p>
 <p>Load maptools package:</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1"><span class="kw">library</span>(sp)</a>
-<a class="sourceLine" id="cb28-2" data-line-number="2"><span class="kw">library</span>(rgeos)</a>
-<a class="sourceLine" id="cb28-3" data-line-number="3"><span class="kw">library</span>(maptools)</a></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" title="1"><span class="kw">library</span>(sp)</a>
+<a class="sourceLine" id="cb28-2" title="2"><span class="kw">library</span>(rgeos)</a>
+<a class="sourceLine" id="cb28-3" title="3"><span class="kw">library</span>(maptools)</a></code></pre></div>
 <p>Read data:</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1"><span class="kw">data</span>(DiseaseData_shp)</a>
-<a class="sourceLine" id="cb29-2" data-line-number="2"><span class="kw">data</span>(SoilType_shp)</a>
-<a class="sourceLine" id="cb29-3" data-line-number="3"><span class="kw">data</span>(Watershed_shp)</a>
-<a class="sourceLine" id="cb29-4" data-line-number="4"><span class="kw">data</span>(Elevation_shp)</a></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" title="1"><span class="kw">data</span>(DiseaseData_shp)</a>
+<a class="sourceLine" id="cb29-2" title="2"><span class="kw">data</span>(SoilType_shp)</a>
+<a class="sourceLine" id="cb29-3" title="3"><span class="kw">data</span>(Watershed_shp)</a>
+<a class="sourceLine" id="cb29-4" title="4"><span class="kw">data</span>(Elevation_shp)</a></code></pre></div>
 <p>In the following demo, the first parameter “DiseaseData_shp” represents shape file data storing explained variable, the second parameter c(SoilType_shp, Watershed_shp, Elevation_shp) represents shape file data storing explanatory variables, and the third parameter c(‘incidence’, ‘soiltype’, ‘watershed’, ‘elevation’) represent field names used in calculation in explained variable and explanatory variables, respectively.</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1">CollectData2 &lt;-<span class="st"> </span><span class="kw">maps2dataframe</span>(DiseaseData_shp,<span class="kw">c</span>(SoilType_shp, Watershed_shp, </a>
-<a class="sourceLine" id="cb30-2" data-line-number="2">                              Elevation_shp),<span class="dt">namescolomn=</span> <span class="kw">c</span>(<span class="st">'incidence'</span>, </a>
-<a class="sourceLine" id="cb30-3" data-line-number="3">                               <span class="st">'soiltype'</span>, <span class="st">'watershed'</span>, <span class="st">'elevation'</span>))</a>
-<a class="sourceLine" id="cb30-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb30-5" data-line-number="5"><span class="kw">head</span>(CollectData2)</a></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" title="1">CollectData2 &lt;-<span class="st"> </span><span class="kw">maps2dataframe</span>(DiseaseData_shp,<span class="kw">c</span>(SoilType_shp, Watershed_shp, </a>
+<a class="sourceLine" id="cb30-2" title="2">                              Elevation_shp),<span class="dt">namescolomn=</span> <span class="kw">c</span>(<span class="st">&#39;incidence&#39;</span>, </a>
+<a class="sourceLine" id="cb30-3" title="3">                               <span class="st">&#39;soiltype&#39;</span>, <span class="st">&#39;watershed&#39;</span>, <span class="st">&#39;elevation&#39;</span>))</a>
+<a class="sourceLine" id="cb30-4" title="4"></a>
+<a class="sourceLine" id="cb30-5" title="5"><span class="kw">head</span>(CollectData2)</a></code></pre></div>
 <pre><code>##   incidence soiltype watershed elevation
 ## 1      5.94        5         5         5
 ## 2      5.87        4         5         5
@@ -585,7 +620,7 @@ Figure 2. Demo data in GIS format (a) NTDs prevalence <em>Y</em>, (b) Elevation 
 ## 6      6.46        3         2         4</code></pre>
 <p>Using dataset CollectData calculated from maps2dataframe function, the following function can be calculated.</p>
 <p>Risk detector:</p>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" data-line-number="1"><span class="kw">risk_detector</span>(<span class="st">&quot;incidence&quot;</span>,<span class="st">&quot;soiltype&quot;</span>,CollectData2)</a></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" title="1"><span class="kw">risk_detector</span>(<span class="st">&quot;incidence&quot;</span>,<span class="st">&quot;soiltype&quot;</span>,CollectData2)</a></code></pre></div>
 <pre><code>## [[1]]
 ## [[1]]$`Risk Detector`
 ##   soiltype Mean of explained variable
@@ -602,7 +637,7 @@ Figure 2. Demo data in GIS format (a) NTDs prevalence <em>Y</em>, (b) Elevation 
 ## 3  TRUE FALSE FALSE  TRUE  TRUE
 ## 4  TRUE  TRUE  TRUE FALSE  TRUE
 ## 5 FALSE  TRUE  TRUE  TRUE FALSE</code></pre>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1"><span class="kw">risk_detector</span>(<span class="st">&quot;incidence&quot;</span>,<span class="kw">c</span>(<span class="st">&quot;soiltype&quot;</span>),CollectData2)</a></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" title="1"><span class="kw">risk_detector</span>(<span class="st">&quot;incidence&quot;</span>,<span class="kw">c</span>(<span class="st">&quot;soiltype&quot;</span>),CollectData2)</a></code></pre></div>
 <pre><code>## [[1]]
 ## [[1]]$`Risk Detector`
 ##   soiltype Mean of explained variable
@@ -619,7 +654,7 @@ Figure 2. Demo data in GIS format (a) NTDs prevalence <em>Y</em>, (b) Elevation 
 ## 3  TRUE FALSE FALSE  TRUE  TRUE
 ## 4  TRUE  TRUE  TRUE FALSE  TRUE
 ## 5 FALSE  TRUE  TRUE  TRUE FALSE</code></pre>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1"><span class="kw">risk_detector</span>(<span class="dv">1</span>,<span class="dv">2</span>,CollectData2)</a></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" title="1"><span class="kw">risk_detector</span>(<span class="dv">1</span>,<span class="dv">2</span>,CollectData2)</a></code></pre></div>
 <pre><code>## [[1]]
 ## [[1]]$`Risk Detector`
 ##   soiltype Mean of explained variable
@@ -636,7 +671,7 @@ Figure 2. Demo data in GIS format (a) NTDs prevalence <em>Y</em>, (b) Elevation 
 ## 3  TRUE FALSE FALSE  TRUE  TRUE
 ## 4  TRUE  TRUE  TRUE FALSE  TRUE
 ## 5 FALSE  TRUE  TRUE  TRUE FALSE</code></pre>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" data-line-number="1"><span class="kw">risk_detector</span>(<span class="dv">1</span>,<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>),CollectData2)</a></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" title="1"><span class="kw">risk_detector</span>(<span class="dv">1</span>,<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>),CollectData2)</a></code></pre></div>
 <pre><code>## [[1]]
 ## [[1]]$`Risk Detector`
 ##   soiltype Mean of explained variable
@@ -702,11 +737,11 @@ Figure 2. Demo data in GIS format (a) NTDs prevalence <em>Y</em>, (b) Elevation 
 ## 6  TRUE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE
 ## 7  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE</code></pre>
 <p>factor detector:</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" data-line-number="1"><span class="kw">factor_detector</span>(<span class="st">&quot;incidence&quot;</span>,<span class="st">&quot;elevation&quot;</span>,CollectData2)</a></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" title="1"><span class="kw">factor_detector</span>(<span class="st">&quot;incidence&quot;</span>,<span class="st">&quot;elevation&quot;</span>,CollectData2)</a></code></pre></div>
 <pre><code>## [[1]]
 ##           q-statistic    p-value
 ## elevation   0.6067087 0.04080407</code></pre>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" data-line-number="1"><span class="kw">factor_detector</span> (<span class="st">&quot;incidence&quot;</span>,<span class="kw">c</span>(<span class="st">&quot;elevation&quot;</span>,<span class="st">&quot;watershed&quot;</span>),CollectData2)</a></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" title="1"><span class="kw">factor_detector</span> (<span class="st">&quot;incidence&quot;</span>,<span class="kw">c</span>(<span class="st">&quot;elevation&quot;</span>,<span class="st">&quot;watershed&quot;</span>),CollectData2)</a></code></pre></div>
 <pre><code>## [[1]]
 ##           q-statistic    p-value
 ## elevation   0.6067087 0.04080407
@@ -714,11 +749,11 @@ Figure 2. Demo data in GIS format (a) NTDs prevalence <em>Y</em>, (b) Elevation 
 ## [[2]]
 ##           q-statistic      p-value
 ## watershed   0.6377737 0.0001169914</code></pre>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb44-1" data-line-number="1"><span class="kw">factor_detector</span>(<span class="dv">1</span>,<span class="dv">3</span>,CollectData2)</a></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb44-1" title="1"><span class="kw">factor_detector</span>(<span class="dv">1</span>,<span class="dv">3</span>,CollectData2)</a></code></pre></div>
 <pre><code>## [[1]]
 ##           q-statistic      p-value
 ## watershed   0.6377737 0.0001169914</code></pre>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb46-1" data-line-number="1"><span class="kw">factor_detector</span> (<span class="dv">1</span>,<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>),CollectData2)</a></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb46-1" title="1"><span class="kw">factor_detector</span> (<span class="dv">1</span>,<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>),CollectData2)</a></code></pre></div>
 <pre><code>## [[1]]
 ##          q-statistic   p-value
 ## soiltype   0.3857168 0.3632363
@@ -731,62 +766,73 @@ Figure 2. Demo data in GIS format (a) NTDs prevalence <em>Y</em>, (b) Elevation 
 ##           q-statistic    p-value
 ## elevation   0.6067087 0.04080407</code></pre>
 <p>ecological detector:</p>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb48-1" data-line-number="1"><span class="kw">ecological_detector</span>(<span class="st">&quot;incidence&quot;</span>,<span class="kw">c</span>(<span class="st">&quot;soiltype&quot;</span>,<span class="st">&quot;watershed&quot;</span>),CollectData2)</a></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb48-1" title="1"><span class="kw">ecological_detector</span>(<span class="st">&quot;incidence&quot;</span>,<span class="kw">c</span>(<span class="st">&quot;soiltype&quot;</span>,<span class="st">&quot;watershed&quot;</span>),CollectData2)</a></code></pre></div>
 <pre><code>## $`Significance.F-test:0.05`
 ##           soiltype watershed
 ## soiltype     FALSE      TRUE
 ## watershed     TRUE     FALSE</code></pre>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb50-1" data-line-number="1"><span class="kw">ecological_detector</span>(<span class="st">&quot;incidence&quot;</span>,<span class="kw">c</span>(<span class="st">&quot;soiltype&quot;</span>,<span class="st">&quot;watershed&quot;</span>,<span class="st">&quot;elevation&quot;</span>),CollectData2)</a></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb50-1" title="1"><span class="kw">ecological_detector</span>(<span class="st">&quot;incidence&quot;</span>,<span class="kw">c</span>(<span class="st">&quot;soiltype&quot;</span>,<span class="st">&quot;watershed&quot;</span>,<span class="st">&quot;elevation&quot;</span>),CollectData2)</a></code></pre></div>
 <pre><code>## $`Significance.F-test:0.05`
 ##           soiltype watershed elevation
 ## soiltype     FALSE      TRUE      TRUE
 ## watershed     TRUE     FALSE     FALSE
 ## elevation     TRUE     FALSE     FALSE</code></pre>
 <p>interaction detector:</p>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb52-1" data-line-number="1"><span class="kw">interaction_detector</span>(<span class="st">&quot;incidence&quot;</span>,<span class="kw">c</span>(<span class="st">&quot;soiltype&quot;</span>,<span class="st">&quot;watershed&quot;</span>),CollectData2)</a></code></pre></div>
-<pre><code>##                    soiltype         watershed
-## soiltype  0.385716842809428 0.735680548139531
-## watershed 0.735680548139531 0.637773670070423</code></pre>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb54-1" data-line-number="1"><span class="kw">interaction_detector</span>(<span class="st">&quot;incidence&quot;</span>,<span class="kw">c</span>(<span class="st">&quot;soiltype&quot;</span>,<span class="st">&quot;watershed&quot;</span>,<span class="st">&quot;elevation&quot;</span>),CollectData2)</a></code></pre></div>
-<pre><code>##                    soiltype         watershed         elevation
-## soiltype  0.385716842809428 0.735680548139531 0.663523698335635
-## watershed 0.735680548139531 0.637773670070423  0.71359677853471
-## elevation 0.663523698335635  0.71359677853471 0.606708709727727</code></pre>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb52-1" title="1"><span class="kw">interaction_detector</span>(<span class="st">&quot;incidence&quot;</span>,<span class="kw">c</span>(<span class="st">&quot;soiltype&quot;</span>,<span class="st">&quot;watershed&quot;</span>),CollectData2)</a></code></pre></div>
+<pre><code>##      [,1]        [,2]        [,3]               
+## [1,] &quot;soiltype&quot;  &quot;watershed&quot; &quot;0.735680548139531&quot;
+## [2,] &quot;soiltype&quot;  &quot;soiltype&quot;  &quot;0.385716842809428&quot;
+## [3,] &quot;watershed&quot; &quot;watershed&quot; &quot;0.637773670070423&quot;</code></pre>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb54-1" title="1"><span class="kw">interaction_detector</span>(<span class="st">&quot;incidence&quot;</span>,<span class="kw">c</span>(<span class="st">&quot;soiltype&quot;</span>,<span class="st">&quot;watershed&quot;</span>,<span class="st">&quot;elevation&quot;</span>),CollectData2)</a></code></pre></div>
+<pre><code>##       [,1]        [,2]        [,3]               
+##  [1,] &quot;soiltype&quot;  &quot;watershed&quot; &quot;0.735680548139531&quot;
+##  [2,] &quot;soiltype&quot;  &quot;soiltype&quot;  &quot;0.385716842809428&quot;
+##  [3,] &quot;watershed&quot; &quot;watershed&quot; &quot;0.637773670070423&quot;
+##  [4,] &quot;soiltype&quot;  &quot;elevation&quot; &quot;0.663523698335635&quot;
+##  [5,] &quot;soiltype&quot;  &quot;soiltype&quot;  &quot;0.385716842809428&quot;
+##  [6,] &quot;elevation&quot; &quot;elevation&quot; &quot;0.606708709727727&quot;
+##  [7,] &quot;watershed&quot; &quot;elevation&quot; &quot;0.71359677853471&quot; 
+##  [8,] &quot;watershed&quot; &quot;watershed&quot; &quot;0.637773670070423&quot;
+##  [9,] &quot;elevation&quot; &quot;elevation&quot; &quot;0.606708709727727&quot;</code></pre>
 </div>
 <div id="output" class="section level2">
 <h2>6 Output</h2>
 <p>The result of factor detector function or risk detector function can be saved as one CSV file, for example:</p>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" data-line-number="1">Result_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">factor_detector</span> (<span class="st">&quot;incidence&quot;</span>,<span class="kw">c</span>(<span class="st">&quot;soiltype&quot;</span>,<span class="st">&quot;watershed&quot;</span>, <span class="st">&quot;elevation&quot;</span>),CollectData)</a>
-<a class="sourceLine" id="cb56-2" data-line-number="2"><span class="kw">write.csv</span>(Result_<span class="dv">1</span> [[<span class="dv">1</span>]],<span class="st">'./Geodetector_R/</span></a>
-<a class="sourceLine" id="cb56-3" data-line-number="3"><span class="st">          output_factor_detector_soiltype.csv'</span>) </a>
-<a class="sourceLine" id="cb56-4" data-line-number="4"><span class="kw">write.csv</span>(Result_<span class="dv">1</span> [[<span class="dv">2</span>]],<span class="st">'./Geodetector_R/</span></a>
-<a class="sourceLine" id="cb56-5" data-line-number="5"><span class="st">          output_factor_detector_watershed.csv'</span>) </a>
-<a class="sourceLine" id="cb56-6" data-line-number="6"><span class="kw">write.csv</span>(Result_<span class="dv">1</span> [[<span class="dv">3</span>]],<span class="st">'./Geodetector_R/</span></a>
-<a class="sourceLine" id="cb56-7" data-line-number="7"><span class="st">          output_factor_detector_elevation.csv'</span>) </a>
-<a class="sourceLine" id="cb56-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb56-9" data-line-number="9">Result_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">risk_detector</span>(<span class="st">&quot;incidence&quot;</span>,<span class="kw">c</span>(<span class="st">&quot;soiltype&quot;</span>,<span class="st">&quot;watershed&quot;</span>),</a>
-<a class="sourceLine" id="cb56-10" data-line-number="10">                          CollectData)</a>
-<a class="sourceLine" id="cb56-11" data-line-number="11"><span class="kw">write.csv</span>(Result_<span class="dv">2</span> [[<span class="dv">1</span>]][<span class="dv">1</span>],<span class="st">'./Geodetector_R/</span></a>
-<a class="sourceLine" id="cb56-12" data-line-number="12"><span class="st">          output_risk_detector_soiltype_Mean.csv'</span>) </a>
-<a class="sourceLine" id="cb56-13" data-line-number="13"><span class="kw">write.csv</span>(Result_<span class="dv">2</span> [[<span class="dv">1</span>]][<span class="dv">2</span>],<span class="st">'./Geodetector_R/</span></a>
-<a class="sourceLine" id="cb56-14" data-line-number="14"><span class="st">          output_risk_detector_soiltype_Significance.csv'</span>) </a>
-<a class="sourceLine" id="cb56-15" data-line-number="15"><span class="kw">write.csv</span>(Result_<span class="dv">2</span> [[<span class="dv">2</span>]][<span class="dv">1</span>],<span class="st">'./Geodetector_R/</span></a>
-<a class="sourceLine" id="cb56-16" data-line-number="16"><span class="st">          output_risk_detector_watershed_Mean.csv'</span>) </a>
-<a class="sourceLine" id="cb56-17" data-line-number="17"><span class="kw">write.csv</span>(Result_<span class="dv">2</span> [[<span class="dv">2</span>]][<span class="dv">2</span>],<span class="st">'./Geodetector_R/</span></a>
-<a class="sourceLine" id="cb56-18" data-line-number="18"><span class="st">          output_risk_detector_watershed_Significance.csv'</span>) </a></code></pre></div>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" title="1">Result_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">factor_detector</span> (<span class="st">&quot;incidence&quot;</span>,<span class="kw">c</span>(<span class="st">&quot;soiltype&quot;</span>,<span class="st">&quot;watershed&quot;</span>, <span class="st">&quot;elevation&quot;</span>),CollectData)</a>
+<a class="sourceLine" id="cb56-2" title="2"><span class="kw">write.csv</span>(Result_<span class="dv">1</span> [[<span class="dv">1</span>]],<span class="st">&#39;./Geodetector_R/</span></a>
+<a class="sourceLine" id="cb56-3" title="3"><span class="st">          output_factor_detector_soiltype.csv&#39;</span>) </a>
+<a class="sourceLine" id="cb56-4" title="4"><span class="kw">write.csv</span>(Result_<span class="dv">1</span> [[<span class="dv">2</span>]],<span class="st">&#39;./Geodetector_R/</span></a>
+<a class="sourceLine" id="cb56-5" title="5"><span class="st">          output_factor_detector_watershed.csv&#39;</span>) </a>
+<a class="sourceLine" id="cb56-6" title="6"><span class="kw">write.csv</span>(Result_<span class="dv">1</span> [[<span class="dv">3</span>]],<span class="st">&#39;./Geodetector_R/</span></a>
+<a class="sourceLine" id="cb56-7" title="7"><span class="st">          output_factor_detector_elevation.csv&#39;</span>) </a>
+<a class="sourceLine" id="cb56-8" title="8"></a>
+<a class="sourceLine" id="cb56-9" title="9">Result_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">risk_detector</span>(<span class="st">&quot;incidence&quot;</span>,<span class="kw">c</span>(<span class="st">&quot;soiltype&quot;</span>,<span class="st">&quot;watershed&quot;</span>),</a>
+<a class="sourceLine" id="cb56-10" title="10">                          CollectData)</a>
+<a class="sourceLine" id="cb56-11" title="11"><span class="kw">write.csv</span>(Result_<span class="dv">2</span> [[<span class="dv">1</span>]][<span class="dv">1</span>],<span class="st">&#39;./Geodetector_R/</span></a>
+<a class="sourceLine" id="cb56-12" title="12"><span class="st">          output_risk_detector_soiltype_Mean.csv&#39;</span>) </a>
+<a class="sourceLine" id="cb56-13" title="13"><span class="kw">write.csv</span>(Result_<span class="dv">2</span> [[<span class="dv">1</span>]][<span class="dv">2</span>],<span class="st">&#39;./Geodetector_R/</span></a>
+<a class="sourceLine" id="cb56-14" title="14"><span class="st">          output_risk_detector_soiltype_Significance.csv&#39;</span>) </a>
+<a class="sourceLine" id="cb56-15" title="15"><span class="kw">write.csv</span>(Result_<span class="dv">2</span> [[<span class="dv">2</span>]][<span class="dv">1</span>],<span class="st">&#39;./Geodetector_R/</span></a>
+<a class="sourceLine" id="cb56-16" title="16"><span class="st">          output_risk_detector_watershed_Mean.csv&#39;</span>) </a>
+<a class="sourceLine" id="cb56-17" title="17"><span class="kw">write.csv</span>(Result_<span class="dv">2</span> [[<span class="dv">2</span>]][<span class="dv">2</span>],<span class="st">&#39;./Geodetector_R/</span></a>
+<a class="sourceLine" id="cb56-18" title="18"><span class="st">          output_risk_detector_watershed_Significance.csv&#39;</span>) </a></code></pre></div>
 <p>The result of interaction detector function or ecological detector function also can be saved as CSV file, for example:</p>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" data-line-number="1">Result_<span class="dv">3</span> &lt;-<span class="st"> </span><span class="kw">interaction_detector</span>(<span class="st">&quot;incidence&quot;</span>,<span class="kw">c</span>(<span class="st">&quot;soiltype&quot;</span>,<span class="st">&quot;watershed&quot;</span>,</a>
-<a class="sourceLine" id="cb57-2" data-line-number="2">                                               <span class="st">&quot;elevation&quot;</span>),CollectData)</a>
-<a class="sourceLine" id="cb57-3" data-line-number="3"><span class="kw">write.csv</span>(Result_<span class="dv">3</span>,<span class="st">'./Geodetector_R/</span></a>
-<a class="sourceLine" id="cb57-4" data-line-number="4"><span class="st">          output_interaction_detector.csv'</span>) </a>
-<a class="sourceLine" id="cb57-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb57-6" data-line-number="6">Result_<span class="dv">4</span> &lt;-<span class="st"> </span><span class="kw">ecological_detector</span>(<span class="st">&quot;incidence&quot;</span>,<span class="kw">c</span>(<span class="st">&quot;soiltype&quot;</span>,<span class="st">&quot;watershed&quot;</span>),</a>
-<a class="sourceLine" id="cb57-7" data-line-number="7">                                CollectData)</a>
-<a class="sourceLine" id="cb57-8" data-line-number="8"><span class="kw">write.csv</span>(Result_<span class="dv">4</span>,<span class="st">'./Geodetector_R/</span></a>
-<a class="sourceLine" id="cb57-9" data-line-number="9"><span class="st">          output_ecological_detector.csv'</span>) </a></code></pre></div>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" title="1">Result_<span class="dv">3</span> &lt;-<span class="st"> </span><span class="kw">interaction_detector</span>(<span class="st">&quot;incidence&quot;</span>,<span class="kw">c</span>(<span class="st">&quot;soiltype&quot;</span>,<span class="st">&quot;watershed&quot;</span>,</a>
+<a class="sourceLine" id="cb57-2" title="2">                                               <span class="st">&quot;elevation&quot;</span>),CollectData)</a>
+<a class="sourceLine" id="cb57-3" title="3"><span class="kw">write.csv</span>(Result_<span class="dv">3</span>,<span class="st">&#39;./Geodetector_R/</span></a>
+<a class="sourceLine" id="cb57-4" title="4"><span class="st">          output_interaction_detector.csv&#39;</span>) </a></code></pre></div>
+<pre><code>## Error in file(file, ifelse(append, &quot;a&quot;, &quot;w&quot;)): 无法打开链结</code></pre>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb59-1" title="1">Result_<span class="dv">4</span> &lt;-<span class="st"> </span><span class="kw">ecological_detector</span>(<span class="st">&quot;incidence&quot;</span>,<span class="kw">c</span>(<span class="st">&quot;soiltype&quot;</span>,<span class="st">&quot;watershed&quot;</span>),</a>
+<a class="sourceLine" id="cb59-2" title="2">                                CollectData)</a>
+<a class="sourceLine" id="cb59-3" title="3"><span class="kw">write.csv</span>(Result_<span class="dv">4</span>,<span class="st">&#39;./Geodetector_R/</span></a>
+<a class="sourceLine" id="cb59-4" title="4"><span class="st">          output_ecological_detector.csv&#39;</span>) </a></code></pre></div>
+<pre><code>## Error in file(file, ifelse(append, &quot;a&quot;, &quot;w&quot;)): 无法打开链结</code></pre>
 </div>
 </div>
 
+
+
+<!-- code folding -->
 
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
