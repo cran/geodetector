@@ -127,7 +127,7 @@ risk_detector <- function(y_column,x_column_nn,tabledata){
   for (num  in 1: n_x)
   {
     x_column <- x_column_n[num]
-    if((class(tabledata[[x_column]])=="factor")|(class(tabledata[[x_column]])=="character")  )
+    if(inherits(tabledata[[x_column]],"factor")|inherits(tabledata[[x_column]],"character")  )
     {
       for(i in 1:long){
         if(tabledata[[x_column]][i]=="")
@@ -158,7 +158,7 @@ risk_detector <- function(y_column,x_column_nn,tabledata){
 
   for(i in 1:long)
   {
-    if(class(tabledata[[y_column]][i])=="character")
+    if(inherits(tabledata[[y_column]][i],"character"))
     {
       #dealing &break
       stop("the data type of Y variable can not be character ,in column :",y_column)
@@ -291,7 +291,7 @@ risk_detector <- function(y_column,x_column_nn,tabledata){
 
 reshapeMatrix <- function(dataset)
 {
-  if(class(dataset) ==  "character") dataset = t(as.matrix(dataset))
+  if(inherits(dataset,"character")) dataset = t(as.matrix(dataset))
 
   fldName1 <- as.vector(dataset[,1])
   fldName2 <- as.vector(dataset[,2])

@@ -142,7 +142,7 @@ ecological_detector <- function(y_column,x_column_nn,tabledata)
   for (num  in 1: n_x)
   {
 	  x_column <- x_column_n[num]
-	  if((class(tabledata[[x_column]])=="factor")|(class(tabledata[[x_column]])=="character") )
+	  if(inherits(tabledata[[x_column]],"factor")|inherits(tabledata[[x_column]],"character") )
 	  {
 		for(i in 1:long){
 			if(tabledata[[x_column]][i]=="")
@@ -171,7 +171,7 @@ ecological_detector <- function(y_column,x_column_nn,tabledata)
   #(These apply to numeric values and real and imaginary parts of complex values but not to values of integer vectors.)
 
   for(i in 1:long){
-	if(class(tabledata[[y_column]][i])=="character")
+	if(inherits(tabledata[[y_column]][i],"character"))
 	{
 		#dealing &break
 		stop("data hava character in column :",y_column)

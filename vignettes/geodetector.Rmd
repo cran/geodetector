@@ -61,7 +61,7 @@ geodetector package includes five functions: factor_detector, interaction_detect
 )
 ```
 
-geodetector package depends on the following packages: rgeo, sp, maptools and rgdal, which should be installed in advance.
+geodetector package is available for data.frame. Please check the data type in advance.
 
 
 As a demo, neural-tube birth defects (NTD) *Y* and suspected risk factors or their proxies *Xs* in villages are provided, including data for the health effect GIS layers and environmental factor GIS layers, “elevation”, “soil type”, and “watershed”.
@@ -186,107 +186,3 @@ ecological_detector("incidence",c("soiltype","watershed","elevation"),CollectDat
 ```
 
 where, c("soiltype","watershed","elevation") are field names of field for explanatory variables.
-
-## 5	Transform data from map to table format
-
-If the input data is in table format, it can be directly used as input parameters in the above functions. However, if input data is map in shapefile format, the function named geodetector can be used to transform from shapefile map to table format, then the above function can be used. Please note that, these shapefile layers should have the same projected coordinate system.
-
-Load maptools package:
-
-```{r}
-library(sp)
-library(rgeos)
-library(maptools)
-```
-
-Read data:
-
-```{r}
-data(DiseaseData_shp)
-data(SoilType_shp)
-data(Watershed_shp)
-data(Elevation_shp)
-```
-
-In the following demo, the first parameter "DiseaseData_shp" represents shape file data storing explained variable, the second parameter c(SoilType_shp, Watershed_shp, Elevation_shp) represents shape file data storing explanatory variables, and the third parameter c('incidence', 'soiltype', 'watershed', 'elevation') represent field names used in calculation in explained variable and explanatory variables, respectively.
-
-
-
-```{r}
-CollectData2 <- maps2dataframe(DiseaseData_shp,c(SoilType_shp, Watershed_shp, 
-                              Elevation_shp),namescolomn= c('incidence', 
-                               'soiltype', 'watershed', 'elevation'))
-
-head(CollectData2)
-```
-
-Using dataset CollectData calculated from maps2dataframe function, the following function can be calculated.
-
-Risk detector:
-
-```{r}
-risk_detector("incidence","soiltype",CollectData2)
-risk_detector("incidence",c("soiltype"),CollectData2)
-
-risk_detector(1,2,CollectData2)
-risk_detector(1,c(2,3,4),CollectData2)
-``` 
-
-factor detector:
-```{r}
-factor_detector("incidence","elevation",CollectData2)
-factor_detector ("incidence",c("elevation","watershed"),CollectData2)
-
-factor_detector(1,3,CollectData2)
-factor_detector (1,c(2,3,4),CollectData2)
-``` 
-
-ecological detector:
-```{r}
-ecological_detector("incidence",c("soiltype","watershed"),CollectData2)
-ecological_detector("incidence",c("soiltype","watershed","elevation"),CollectData2)
-``` 
-
-interaction detector:
-``` {r}
-interaction_detector("incidence",c("soiltype","watershed"),CollectData2)
-interaction_detector("incidence",c("soiltype","watershed","elevation"),CollectData2)
-```
-
-## 6	Output
-
-The result of factor detector function or risk detector function can be saved as one CSV file, for example: 
-
-```{r, eval=F}
-Result_1 <- factor_detector ("incidence",c("soiltype","watershed", "elevation"),CollectData)
-write.csv(Result_1 [[1]],'./Geodetector_R/
-          output_factor_detector_soiltype.csv') 
-write.csv(Result_1 [[2]],'./Geodetector_R/
-          output_factor_detector_watershed.csv') 
-write.csv(Result_1 [[3]],'./Geodetector_R/
-          output_factor_detector_elevation.csv') 
-
-Result_2 <- risk_detector("incidence",c("soiltype","watershed"),
-                          CollectData)
-write.csv(Result_2 [[1]][1],'./Geodetector_R/
-          output_risk_detector_soiltype_Mean.csv') 
-write.csv(Result_2 [[1]][2],'./Geodetector_R/
-          output_risk_detector_soiltype_Significance.csv') 
-write.csv(Result_2 [[2]][1],'./Geodetector_R/
-          output_risk_detector_watershed_Mean.csv') 
-write.csv(Result_2 [[2]][2],'./Geodetector_R/
-          output_risk_detector_watershed_Significance.csv') 
-```
-
-The result of interaction detector function or ecological detector function also can be saved as CSV file, for example: 
-```{r}
-Result_3 <- interaction_detector("incidence",c("soiltype","watershed",
-                                               "elevation"),CollectData)
-write.csv(Result_3,'./Geodetector_R/
-          output_interaction_detector.csv') 
-
-Result_4 <- ecological_detector("incidence",c("soiltype","watershed"),
-                                CollectData)
-write.csv(Result_4,'./Geodetector_R/
-          output_ecological_detector.csv') 
-```
